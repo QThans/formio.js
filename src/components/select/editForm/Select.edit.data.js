@@ -197,6 +197,51 @@ export default [
     tooltip: 'The field to use as the value.',
     weight: 11,
     refreshOn: 'data.resource',
+    valueProperty: 'key',
+    dataSrc: 'url',
+    lazyLoad: false,
+    onSetItems(component, form) {
+      const newItems = form.type === 'resource'
+        ? [{
+            label: '{Entire Object}',
+            key: 'data',
+          }]
+        : [];
+
+      eachComponent(form.components, (component, path) => {
+        if (component.input) {
+          newItems.push({
+            label: component.label || component.key,
+            key: `data.${path}`
+          });
+        }
+      });
+      return newItems;
+    },
+    onChange(context) {
+    },
+    data: {
+      url: '/form/{{ data.data.resource }}',
+    },
+    conditional: {
+      json: {
+        and: [
+          { '===': [{ var: 'data.dataSrc' }, 'resource'] },
+          { var: 'data.data.resource' },
+        ],
+      },
+    },
+  },
+  {
+    type: 'select',
+    input: true,
+    label: 'Label Property',
+    key: 'labelProperty',
+    skipMerge: true,
+    clearOnHide: false,
+    tooltip: 'The field to use as the label.',
+    weight: 11,
+    refreshOn: 'data.resource',
     template: '<span>{{ item.label }}</span>',
     valueProperty: 'key',
     dataSrc: 'url',
@@ -221,7 +266,7 @@ export default [
     },
     onChange(context) {
       if (context && context.flags && context.flags.modified) {
-        const valueProp = context.instance.data.valueProperty;
+        const valueProp = context.instance.data.labelProperty;
         const templateProp = valueProp ? valueProp : 'data';
         const template = `<span>{{ item.${templateProp} }}</span>`;
         const searchField = valueProp ? `${valueProp}__regex` : '';
@@ -449,7 +494,7 @@ export default [
     type: 'select',
     input: true,
     key: 'refreshOn',
-    label: 'Refresh1 Options On',
+    label: 'Refresh Options On',
     weight: 19,
     tooltip: 'Refresh data when another field changes.',
     dataSrc: 'custom',
