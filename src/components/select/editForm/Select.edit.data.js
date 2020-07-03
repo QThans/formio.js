@@ -449,7 +449,7 @@ export default [
     type: 'select',
     input: true,
     key: 'refreshOn',
-    label: 'Refresh Options On',
+    label: 'Refresh1 Options On',
     weight: 19,
     tooltip: 'Refresh data when another field changes.',
     dataSrc: 'custom',
