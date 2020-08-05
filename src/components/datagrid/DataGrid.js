@@ -355,6 +355,7 @@ export default class DataGridComponent extends NestedArrayComponent {
     const [row] = this.rows.splice(index, 1);
     _.each(row, (component) => this.removeComponent(component));
     this.setValue(this.dataValue, { isReordered: true });
+     _.each(this.rows, (component, index) => this.createRowComponents(this.dataValue[index], index));
     this.redraw();
   }
 
